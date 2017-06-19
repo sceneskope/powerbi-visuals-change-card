@@ -9,7 +9,6 @@ module powerbi.extensibility.visual {
         private model?: Model;
 
         constructor(options: VisualConstructorOptions) {
-            console.log("construct");
             this.host = options.host;
             this.target = options.element;
             this.updateCount = 0;
@@ -17,18 +16,14 @@ module powerbi.extensibility.visual {
 
         public update(options: VisualUpdateOptions) {
             try {
+                const text = this.target.ownerDocument.createElement("p");
                 const model = this.model = visualTransform(options, this.host);
-                console.log("model = ", model);
-                if (model.value == undefined) {
-                    console.log("nothing to see");
-                    this.target.innerHTML = "<p />";
-                } else {
+                if (model.value !== undefined) {
                     const formatted = model.formatter.format(model.value);
                     const setting = (model.value > 0)
                         ? model.settings.positive
                         : ((model.value < 0) ? model.settings.negative : model.settings.neutral);
 
-                    const text = this.target.ownerDocument.createElement("p");
                     if (setting.show) {
                         text.textContent = `${formatted}${setting.symbol}`;
                         if (setting.color) {
@@ -38,8 +33,8 @@ module powerbi.extensibility.visual {
                     } else {
                         text.textContent = `${formatted}`;
                     }
-                    this.setText(text);
                 }
+                this.setText(text);
             }
             catch (ex) {
                 console.warn(ex);

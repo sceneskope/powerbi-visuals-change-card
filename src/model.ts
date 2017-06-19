@@ -10,7 +10,6 @@ module powerbi.extensibility.visual {
     }
 
     export function visualTransform(options: VisualUpdateOptions, host: IVisualHost) : Model {
-        console.log("visual transform");
         if (!options
         || !options.dataViews
         || !options.dataViews[0]
